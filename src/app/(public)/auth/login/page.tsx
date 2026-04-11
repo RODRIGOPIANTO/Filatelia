@@ -1,13 +1,48 @@
-import type { Metadata } from 'next'
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import styles from '../auth.module.css'
 
-export const metadata: Metadata = {
-  title: 'Iniciar Sesión — Filatelia Peruana',
-  description: 'Ingrese a su cuenta de Filatelia Peruana para acceder a sus colecciones.',
-}
-
 export default function LoginPage() {
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al iniciar sesión')
+      }
+
+      // En modo demo, guardamos el token en localStorage para permitir acceso visual
+      localStorage.setItem('auth_token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+
+      // Redirigir al dashboard
+      router.push('/admin/dashboard')
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.card}>
@@ -17,8 +52,9 @@ export default function LoginPage() {
           <p className={styles.cardSubtitle}>Ingrese a su cuenta de coleccionista</p>
         </div>
 
-        {/* Form — action vacío: en producción, llamar a NextAuth signIn */}
-        <form className={styles.form} id="login-form" action="#" method="POST" noValidate>
+        <form className={styles.form} id="login-form" onSubmit={handleSubmit}>
+          {error && <div className={styles.errorBanner}>{error}</div>}
+          
           <div className={styles.formGroup}>
             <label htmlFor="email" className={styles.label}>
               Email o nombre de usuario
@@ -26,11 +62,13 @@ export default function LoginPage() {
             <input
               id="email"
               name="email"
-              type="email"
-              autoComplete="email"
+              type="text"
               required
-              placeholder="coleccionista@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@test.com"
               className={styles.input}
+              disabled={loading}
             />
           </div>
 
@@ -42,10 +80,12 @@ export default function LoginPage() {
               id="password"
               name="password"
               type="password"
-              autoComplete="current-password"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               className={styles.input}
+              disabled={loading}
             />
           </div>
 
@@ -53,8 +93,9 @@ export default function LoginPage() {
             type="submit"
             id="login-submit"
             className={`btn btn--primary ${styles.submitBtn}`}
+            disabled={loading}
           >
-            Entrar
+            {loading ? 'Cargando...' : 'Entrar'}
           </button>
         </form>
 

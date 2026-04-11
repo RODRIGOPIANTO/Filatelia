@@ -48,6 +48,17 @@
   color: var(--color-text-muted);
 }
 
+.errorBanner {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+  padding: var(--sp-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  text-align: center;
+  margin-bottom: var(--sp-4);
+}
+
 /* Form */
 .form {
   display: flex;
