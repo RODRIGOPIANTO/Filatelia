@@ -1,0 +1,88 @@
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-6);
+}
+
+/* Horizontal bar chart */
+.barRow {
+  display: grid;
+  grid-template-columns: 180px 1fr 70px;
+  align-items: center;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+
+.barLabel {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.barTrack {
+  height: 8px;
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: linear-gradient(to right, var(--color-primary), var(--color-primary-light));
+  border-radius: var(--radius-full);
+  transition: width var(--transition-slow);
+}
+
+.barValue {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  text-align: right;
+}
+
+/* Vertical bar chart */
+.chartBars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-6);
+  height: 220px;
+  padding-bottom: var(--sp-6);
+  border-bottom: 1px solid var(--color-border-dark);
+}
+
+.chartBarCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  flex: 1;
+}
+
+.chartBarNum {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.chartBar {
+  width: 100%;
+  max-width: 80px;
+  background: linear-gradient(to top, var(--color-primary), var(--color-primary-light));
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  min-height: 8px;
+  transition: height var(--transition-slow);
+}
+
+.chartBarMonth {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--sp-3);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .grid2 { grid-template-columns: 1fr; }
+  .barRow { grid-template-columns: 130px 1fr 60px; }
+}

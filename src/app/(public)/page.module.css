@@ -1,0 +1,282 @@
+/* ─── HERO ─────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  background-image: url('/images/biblioteca-hd.png');
+  background-size: cover;
+  background-position: center top;
+  overflow: hidden;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 20, 10, 0.88) 0%,
+    rgba(20, 40, 20, 0.75) 50%,
+    rgba(10, 20, 10, 0.85) 100%
+  );
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  padding-top: var(--sp-16);
+  padding-bottom: var(--sp-16);
+}
+
+.heroPretitle {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: var(--sp-5);
+  padding: var(--sp-1) var(--sp-4);
+  border: 1px solid rgba(200, 169, 110, 0.4);
+  border-radius: var(--radius-full);
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-light);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--sp-6);
+}
+
+.heroAccent {
+  color: var(--color-accent);
+  font-style: italic;
+}
+
+.heroSubtitle {
+  font-family: var(--font-body);
+  font-size: var(--fs-lg);
+  color: rgba(232, 224, 208, 0.75);
+  margin-bottom: var(--sp-10);
+  line-height: 1.6;
+}
+
+.heroActions {
+  display: flex;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.heroActions .btn--primary {
+  padding: var(--sp-3) var(--sp-8);
+  font-size: var(--fs-base);
+}
+
+.heroActions .btn--outline {
+  padding: var(--sp-3) var(--sp-8);
+  font-size: var(--fs-base);
+}
+
+.heroScroll {
+  position: absolute;
+  bottom: var(--sp-8);
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--color-accent);
+  font-size: var(--fs-lg);
+  opacity: 0.6;
+  animation: bob 2s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ─── SECTIONS ──────────────────────────────────────────────────── */
+.section {
+  padding: var(--sp-20) 0;
+  background-color: var(--color-bg-dark);
+}
+
+.section:nth-child(even) {
+  background-color: #0d160d;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  color: var(--color-text-light);
+  font-weight: var(--fw-semibold);
+  text-align: center;
+  margin-bottom: var(--sp-3);
+  letter-spacing: -0.01em;
+}
+
+.sectionSubtitle {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-bottom: var(--sp-12);
+}
+
+/* ─── CATALOG / STORE GRID ───────────────────────────────────────── */
+.catalogGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-6);
+}
+
+.catalogCard,
+.storeCard {
+  position: relative;
+  height: 380px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  text-decoration: none;
+  display: block;
+  border: 1px solid var(--color-border-dark);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.catalogCard:hover,
+.storeCard:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.catalogCardBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  /* fallback gradient-only si la imagen no carga */
+  background-color: var(--color-bg-surface);
+  transition: transform var(--transition-slow);
+}
+
+.catalogCard:hover .catalogCardBg,
+.storeCard:hover .catalogCardBg {
+  transform: scale(1.05);
+}
+
+.catalogCardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 20, 10, 0.92) 0%,
+    rgba(10, 20, 10, 0.55) 50%,
+    rgba(10, 20, 10, 0.2) 100%
+  );
+}
+
+.storeCard .catalogCardOverlay {
+  background: linear-gradient(
+    to top,
+    rgba(10, 20, 10, 0.95) 0%,
+    rgba(10, 20, 10, 0.6) 60%,
+    rgba(10, 20, 10, 0.2) 100%
+  );
+}
+
+.catalogCardContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--sp-8) var(--sp-8) var(--sp-8);
+}
+
+.catalogCardIcon {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: var(--sp-3);
+}
+
+.catalogCardTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-light);
+  margin-bottom: var(--sp-2);
+  letter-spacing: -0.01em;
+}
+
+.catalogCardDesc {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: rgba(232, 224, 208, 0.7);
+  line-height: 1.5;
+  margin-bottom: var(--sp-5);
+}
+
+.catalogCardCta {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-accent);
+  letter-spacing: 0.04em;
+  transition: letter-spacing var(--transition-fast);
+}
+
+.catalogCard:hover .catalogCardCta,
+.storeCard:hover .catalogCardCta {
+  letter-spacing: 0.08em;
+}
+
+/* ─── VISIT COUNTER ──────────────────────────────────────────────── */
+.visitSection {
+  background-color: var(--color-primary);
+  padding: var(--sp-16) 0;
+  text-align: center;
+}
+
+.visitLabel {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: rgba(232, 224, 208, 0.7);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: var(--sp-4);
+}
+
+.visitCount {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: var(--fw-semibold);
+  color: var(--color-accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.visitSub {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  color: rgba(232, 224, 208, 0.6);
+  margin-top: var(--sp-3);
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .catalogGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .catalogCard,
+  .storeCard {
+    height: 300px;
+  }
+
+  .heroTitle {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+}

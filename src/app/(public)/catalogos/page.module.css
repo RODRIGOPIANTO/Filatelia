@@ -1,0 +1,110 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--color-bg-dark);
+}
+
+.header {
+  background-color: var(--color-bg-nav);
+  border-bottom: 2px solid var(--color-primary);
+  padding: var(--sp-16) 0 var(--sp-10);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-4xl);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-light);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--sp-3);
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: var(--fs-lg);
+  color: var(--color-text-muted);
+}
+
+.grid {
+  padding: var(--sp-16) 0;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-8);
+}
+
+.card {
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border-dark);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-10);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  transition: border-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card:hover {
+  border-color: var(--color-primary-mid);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.cardIcon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-light);
+  letter-spacing: -0.01em;
+}
+
+.cardDesc {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.cardBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.cardCta {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-accent);
+  margin-top: auto;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--color-border-dark);
+  transition: letter-spacing var(--transition-fast);
+}
+
+.card:hover .cardCta {
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: var(--fs-3xl);
+  }
+}

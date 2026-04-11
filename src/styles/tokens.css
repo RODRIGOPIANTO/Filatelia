@@ -1,0 +1,244 @@
+/* ============================================
+   DESIGN TOKENS — filateliaperuana.com
+   Basado en referencia visual oficial (abril 2026)
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  /* ---- Paleta Principal ---- */
+  --color-primary:        #2D4A2D;   /* Verde oscuro navbar */
+  --color-primary-mid:    #3B6B3B;   /* Verde medio (hover, botones) */
+  --color-primary-light:  #4E8B4E;   /* Verde suave (badges activo) */
+  --color-accent:         #C8A96E;   /* Dorado filatélico (bordes de sellos) */
+  --color-accent-dark:    #A0803F;
+
+  /* ---- Fondos ---- */
+  --color-bg-dark:        #0F1A0F;   /* Home hero, admin — fondo muy oscuro */
+  --color-bg-nav:         #1A2E1A;   /* Navbar verde oscuro */
+  --color-bg-surface:     #1E2E1E;   /* Cards en secciones oscuras */
+  --color-bg-elevated:    #253525;   /* Hover en superficies oscuras */
+
+  /* Fondos de CATÁLOGO (páginas de álbum — fondo claro) */
+  --color-bg-album:       #F0EBE0;   /* Crema principal del álbum */
+  --color-bg-album-card:  #F8F4EC;   /* Fondo de tarjeta de sello */
+  --color-bg-album-group: #E8E0D0;   /* Fondo de cabecera de grupo */
+
+  /* ---- Textos ---- */
+  --color-text-light:     #E8E0D0;   /* Texto en fondos oscuros */
+  --color-text-muted:     #9A8E78;   /* Texto secundario en oscuro */
+  --color-text-dark:      #1A1A0F;   /* Texto en fondos claros (álbum) */
+  --color-text-dark-muted:#5A5040;   /* Texto secundario en claro */
+
+  /* ---- Colores de Estado (Admin Badges) ---- */
+  --color-status-active:  #2D6B2D;   /* Habilitado - verde */
+  --color-status-active-bg: #D4EDD4;
+  --color-status-wip:     #8B5B00;   /* En Construcción - ámbar */
+  --color-status-wip-bg:  #FFF0C0;
+  --color-status-draft:   #4A5568;   /* Borrador - gris */
+  --color-status-draft-bg:#E2E8F0;
+  --color-status-inactive:#8B2222;   /* Inactivo - rojo */
+  --color-status-inactive-bg: #FFE0E0;
+
+  /* ---- Colores de Sello (tintes por color de estampilla) ---- */
+  --stamp-tint-blue:      rgba(70, 100, 160, 0.15);
+  --stamp-tint-red:       rgba(180, 60, 60, 0.15);
+  --stamp-tint-green:     rgba(60, 120, 60, 0.15);
+  --stamp-tint-brown:     rgba(140, 90, 40, 0.15);
+  --stamp-tint-violet:    rgba(100, 60, 140, 0.15);
+  --stamp-tint-neutral:   rgba(160, 128, 80, 0.10);
+
+  /* ---- Bordes ---- */
+  --color-border-dark:    #2A3A2A;
+  --color-border-album:   #C8B89A;   /* Borde dorado en páginas de álbum */
+  --color-border-stamp:   #A0803F;   /* Borde de tarjeta de sello */
+
+  /* ---- Tipografía ---- */
+  --font-display: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body:    'Inter', 'Helvetica Neue', sans-serif;
+
+  /* Font Sizes */
+  --fs-xs:   0.6875rem;   /* 11px */
+  --fs-sm:   0.8125rem;   /* 13px */
+  --fs-base: 1rem;        /* 16px */
+  --fs-lg:   1.125rem;    /* 18px */
+  --fs-xl:   1.375rem;    /* 22px */
+  --fs-2xl:  1.75rem;     /* 28px */
+  --fs-3xl:  2.25rem;     /* 36px */
+  --fs-4xl:  3rem;        /* 48px */
+  --fs-5xl:  4rem;        /* 64px */
+
+  /* Font Weights */
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold:600;
+  --fw-bold:    700;
+
+  /* ---- Spacing ---- */
+  --sp-1:  0.25rem;
+  --sp-2:  0.5rem;
+  --sp-3:  0.75rem;
+  --sp-4:  1rem;
+  --sp-5:  1.25rem;
+  --sp-6:  1.5rem;
+  --sp-8:  2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+  --sp-20: 5rem;
+  --sp-24: 6rem;
+
+  /* ---- Bordes Redondeados ---- */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ---- Sombras ---- */
+  --shadow-sm:    0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg:    0 8px 32px rgba(0,0,0,0.5);
+  --shadow-stamp: 0 2px 8px rgba(0,0,0,0.25), 0 0 0 1px var(--color-border-stamp);
+  --shadow-album: 2px 2px 12px rgba(0,0,0,0.15);
+  --shadow-nav:   0 2px 12px rgba(0,0,0,0.4);
+
+  /* ---- Transiciones ---- */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* ---- Layout ---- */
+  --max-width-content: 1200px;
+  --max-width-narrow:  860px;
+  --navbar-height:     64px;
+}
+
+/* ---- Reset Base ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  color: var(--color-text-dark);
+  background-color: var(--color-bg-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Títulos con tipografía serif (pantallas de catálogo) */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-body);
+  border: none;
+  background: none;
+}
+
+/* ---- Utilidades Globales ---- */
+.container {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+}
+
+.container--narrow {
+  max-width: var(--max-width-narrow);
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+}
+
+/* Badge de Estado */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge--active   { background: var(--color-status-active-bg);   color: var(--color-status-active); }
+.badge--wip      { background: var(--color-status-wip-bg);      color: var(--color-status-wip); }
+.badge--draft    { background: var(--color-status-draft-bg);    color: var(--color-status-draft); }
+.badge--inactive { background: var(--color-status-inactive-bg); color: var(--color-status-inactive); }
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-5);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  border-color: var(--color-primary-mid);
+}
+.btn--primary:hover {
+  background-color: var(--color-primary-mid);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: var(--color-text-light);
+  border-color: var(--color-accent);
+}
+.btn--outline:hover {
+  background-color: rgba(200, 169, 110, 0.1);
+  border-color: var(--color-accent);
+}
+
+.btn--sm {
+  padding: var(--sp-1) var(--sp-3);
+  font-size: var(--fs-xs);
+}
+
+/* Foco accesible */
+:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
