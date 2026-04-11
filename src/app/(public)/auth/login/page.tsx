@@ -16,6 +16,9 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     
+    // Crear cookie de sesión para el Middleware (Modo Demo)
+    document.cookie = "admin_token=demo_access; path=/; max-age=3600"
+
     // Acceso Instantáneo para Modo Demo
     router.push('/admin/dashboard')
   }
