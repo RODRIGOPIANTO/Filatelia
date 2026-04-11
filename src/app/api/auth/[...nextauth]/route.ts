@@ -3,6 +3,8 @@ import { compare } from 'bcryptjs'
 import { prisma } from '@/lib/db/prisma'
 import { sign } from 'jsonwebtoken'
 
+export const dynamic = 'force-dynamic'
+
 const SECRET = process.env.NEXTAUTH_SECRET ?? 'dev-secret'
 
 // Simplified JWT auth handler compatible with Next.js 14 App Router
@@ -13,6 +15,17 @@ export async function POST(req: NextRequest) {
     const { email, password } = await req.json()
     if (!email || !password) {
       return NextResponse.json({ error: 'Email y contraseña requeridos' }, { status: 400 })
+    }
+
+    // Prioridad a las credenciales de administrador estáticas (Modo Demo)
+    if (email === 'admin@test.com' && password === 'Admin1234!') {
+      const user = { id: 'demo-admin', name: 'Admin Demo', email: 'admin@test.com', username: 'admin', role: 'ADMIN' }
+      const token = sign(
+        { id: user.id, email: user.email, name: user.name, role: user.role },
+        SECRET,
+        { expiresIn: '7d' }
+      )
+      return NextResponse.json({ token, user })
     }
 
     let user
@@ -26,12 +39,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 })
       }
     } catch {
-      // Demo mode fallback
-      if (email === 'admin@test.com' && password === 'Admin1234!') {
-        user = { id: 'demo', name: 'Admin Demo', email: 'admin@test.com', username: 'admin', role: 'ADMIN' }
-      } else {
-        return NextResponse.json({ error: 'Error de conexión con la base de datos' }, { status: 503 })
-      }
+      return NextResponse.json({ error: 'Error de conexión con la base de datos. Por favor, usa el modo demo.' }, { status: 503 })
     }
 
     const token = sign(
@@ -47,5 +55,5 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  return NextResponse.json({ status: 'Auth API activa' })
+  return NextResponse.json({ status: 'Auth API activa (Modo Demo Habilitado)' })
 }
