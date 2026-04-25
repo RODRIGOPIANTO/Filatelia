@@ -7,14 +7,14 @@
 
 :root {
   /* ---- Paleta Principal ---- */
-  --color-primary:        #2D4A2D;   /* Verde oscuro navbar */
-  --color-primary-mid:    #3B6B3B;   /* Verde medio (hover, botones) */
+  --color-primary:        #556B2F;   /* Verde musgo (headers) */
+  --color-primary-mid:    #6B8E23;   /* Olivo (hover) */
   --color-primary-light:  #4E8B4E;   /* Verde suave (badges activo) */
   --color-accent:         #C8A96E;   /* Dorado filatélico (bordes de sellos) */
   --color-accent-dark:    #A0803F;
 
   /* ---- Fondos ---- */
-  --color-bg-dark:        #0F1A0F;   /* Home hero, admin — fondo muy oscuro */
+  --color-bg-dark:        #000000;   /* Fondo negro principal */
   --color-bg-nav:         #1A2E1A;   /* Navbar verde oscuro */
   --color-bg-surface:     #1E2E1E;   /* Cards en secciones oscuras */
   --color-bg-elevated:    #253525;   /* Hover en superficies oscuras */
@@ -25,10 +25,10 @@
   --color-bg-album-group: #E8E0D0;   /* Fondo de cabecera de grupo */
 
   /* ---- Textos ---- */
-  --color-text-light:     #E8E0D0;   /* Texto en fondos oscuros */
-  --color-text-muted:     #9A8E78;   /* Texto secundario en oscuro */
-  --color-text-dark:      #1A1A0F;   /* Texto en fondos claros (álbum) */
-  --color-text-dark-muted:#5A5040;   /* Texto secundario en claro */
+  --color-text-light:     #F5F5F5;   /* Texto claro principal */
+  --color-text-muted:     #CCCCCC;   /* Texto secundario */
+  --color-text-dark:      #1A1A1A;   /* Texto en fondos claros */
+  --color-text-dark-muted:#555555;   /* Texto secundario en claro */
 
   /* ---- Colores de Estado (Admin Badges) ---- */
   --color-status-active:  #2D6B2D;   /* Habilitado - verde */

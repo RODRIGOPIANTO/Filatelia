@@ -7,9 +7,10 @@ import styles from './Navbar.module.css'
 
 const navLinks = [
   { href: '/catalogos', label: 'Catálogos' },
-  { href: '/catalogos/paises', label: 'Países' },
-  { href: '/catalogos/tematicas', label: 'Temáticas' },
-  { href: '/tienda', label: 'Tienda' },
+  { href: '/escaner', label: 'Escáner IA' },
+  { href: '/mi-album', label: 'Mi Álbum' },
+  { href: '/mercado', label: 'Mercado' },
+  { href: '/foro', label: 'Foro' },
 ]
 
 export default function Navbar() {

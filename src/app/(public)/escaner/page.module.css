@@ -1,0 +1,95 @@
+.container {
+  max-width: 800px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: var(--color-accent, #c8a96e);
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  color: var(--color-text-muted, #ccc);
+  margin-bottom: 3rem;
+}
+
+.uploadBox {
+  margin-bottom: 2rem;
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadLabel {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: var(--color-bg-dark, #0d1a0d);
+  border: 2px dashed var(--color-primary, #556B2F);
+  color: var(--color-primary, #556B2F);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.uploadLabel:hover {
+  background: var(--color-primary, #556B2F);
+  color: #fff;
+}
+
+.previewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.preview {
+  max-width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  border: 1px solid #333;
+}
+
+.resultCard {
+  background: #111;
+  border: 1px solid var(--color-primary, #556B2F);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 3rem;
+  text-align: left;
+  animation: fadeIn 0.5s ease;
+}
+
+.resultGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.resultItem {
+  padding: 0.5rem;
+  border-bottom: 1px solid #222;
+}
+
+.notes {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.error {
+  color: #ff4d4d;
+  margin-top: 2rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
