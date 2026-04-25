@@ -26,38 +26,55 @@ const SECURITY_HEADERS: Record<string, string> = {
   'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
 }
 
-// ─── Admin route guard ────────────────────────────────────────────────────────
-// In production: check JWT cookie / session token properly
-function isAdminAuthenticated(req: NextRequest): boolean {
-  const adminToken = req.cookies.get('admin_token')?.value
-  // Simple demo guard — replace with real JWT verification in production
-  return !!adminToken || process.env.NODE_ENV === 'development'
-}
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl
-  const ip = req.headers.get('x-forwarded-for') ?? req.headers.get('x-real-ip') ?? '127.0.0.1'
+export async function middleware(req: NextRequest) {
+  let response = NextResponse.next({
+    request: {
+      headers: req.headers,
+    },
+  })
 
-  // ── Rate limiting on API routes ──────────────────────────────────────────
-  if (pathname.startsWith('/api/')) {
-    const apiLimit = pathname.startsWith('/api/import') ? 10 : 120
-    if (!rateLimit(ip, apiLimit, 60_000)) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Demasiadas solicitudes. Intenta de nuevo en un minuto.' }),
-        { status: 429, headers: { 'Content-Type': 'application/json', 'Retry-After': '60' } }
-      )
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return req.cookies.get(name)?.value
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          req.cookies.set({ name, value, ...options })
+          response = NextResponse.next({
+            request: {
+              headers: req.headers,
+            },
+          })
+          response.cookies.set({ name, value, ...options })
+        },
+        remove(name: string, options: CookieOptions) {
+          req.cookies.set({ name, value: '', ...options })
+          response = NextResponse.next({
+            request: {
+              headers: req.headers,
+            },
+          })
+          response.cookies.set({ name, value: '', ...options })
+        },
+      },
     }
-  }
+  )
+
+  const { data: { user } } = await supabase.auth.getUser()
 
   // ── Admin route protection ───────────────────────────────────────────────
-  if (pathname.startsWith('/admin') && !isAdminAuthenticated(req)) {
+  const { pathname } = req.nextUrl
+  if (pathname.startsWith('/admin') && !user) {
     const loginUrl = new URL('/auth/login', req.url)
-    loginUrl.searchParams.set('callbackUrl', pathname)
     return NextResponse.redirect(loginUrl)
   }
 
   // ── Build response with security headers ─────────────────────────────────
-  const response = NextResponse.next()
   Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
     response.headers.set(key, value)
   })

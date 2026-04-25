@@ -1,12 +1,10 @@
-import type { Metadata } from 'next'
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import styles from '../auth.module.css'
 import { STAMP_THEMES } from '@/types/catalog'
-
-export const metadata: Metadata = {
-  title: 'Crear Cuenta — Filatelia Peruana',
-  description: 'Regístrese como coleccionista en Filatelia Peruana y acceda a catálogos exclusivos.',
-}
 
 const COUNTRIES = [
   { code: 'PE', name: 'Perú' }, { code: 'AR', name: 'Argentina' }, { code: 'CL', name: 'Chile' },
@@ -22,6 +20,53 @@ const CATALOG_COUNTRIES = [
 ]
 
 export default function RegisterPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    fullName: '',
+    username: '',
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Las contraseñas no coinciden')
+      setLoading(false)
+      return
+    }
+
+    const { supabase } = await import('@/lib/supabase/client')
+    const { error: signUpError } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          full_name: formData.fullName,
+          username: formData.username,
+        }
+      }
+    })
+
+    if (signUpError) {
+      setError(signUpError.message)
+      setLoading(false)
+    } else {
+      alert('Registro exitoso. Por favor revisa tu correo para confirmar tu cuenta.')
+      router.push('/auth/login')
+    }
+  }
+
   return (
     <div className={styles.page}>
       <div className={`${styles.card} ${styles.cardWide}`}>
@@ -31,90 +76,51 @@ export default function RegisterPage() {
           <p className={styles.cardSubtitle}>Únase a la comunidad de coleccionistas del Perú</p>
         </div>
 
-        <form className={styles.form} id="register-form" action="#" method="POST" noValidate>
+        <form className={styles.form} id="register-form" onSubmit={handleSubmit}>
+          {error && <div className={styles.errorBanner}>{error}</div>}
+
           {/* ─── Datos básicos ─── */}
           <h2 className={styles.sectionTitle}>Datos personales</h2>
           <div className={styles.grid2}>
             <div className={styles.formGroup}>
               <label htmlFor="fullName" className={styles.label}>Nombre completo</label>
-              <input id="fullName" name="fullName" type="text" autoComplete="name"
+              <input id="fullName" name="fullName" type="text" 
+                value={formData.fullName} onChange={handleChange}
                 placeholder="Juan Pérez" className={styles.input} />
             </div>
             <div className={styles.formGroup}>
               <label htmlFor="username" className={styles.label}>Nombre de usuario</label>
-              <input id="username" name="username" type="text" autoComplete="username"
+              <input id="username" name="username" type="text"
+                value={formData.username} onChange={handleChange}
                 placeholder="juancoleccionista" className={styles.input} />
             </div>
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="email" className={styles.label}>Email <span className={styles.required}>*</span></label>
-            <input id="email" name="email" type="email" autoComplete="email" required
+            <input id="email" name="email" type="email" required
+              value={formData.email} onChange={handleChange}
               placeholder="correo@ejemplo.com" className={styles.input} />
           </div>
 
           <div className={styles.grid2}>
             <div className={styles.formGroup}>
               <label htmlFor="password" className={styles.label}>Contraseña <span className={styles.required}>*</span></label>
-              <input id="password" name="password" type="password" autoComplete="new-password" required
+              <input id="password" name="password" type="password" required
+                value={formData.password} onChange={handleChange}
                 placeholder="Mínimo 8 caracteres" className={styles.input} />
             </div>
             <div className={styles.formGroup}>
               <label htmlFor="confirmPassword" className={styles.label}>Confirmar contraseña <span className={styles.required}>*</span></label>
               <input id="confirmPassword" name="confirmPassword" type="password"
-                autoComplete="new-password" required placeholder="Repita la contraseña" className={styles.input} />
+                value={formData.confirmPassword} onChange={handleChange}
+                required placeholder="Repita la contraseña" className={styles.input} />
             </div>
           </div>
 
-          <div className={styles.grid2}>
-            <div className={styles.formGroup}>
-              <label htmlFor="birthDate" className={styles.label}>Fecha de nacimiento</label>
-              <input id="birthDate" name="birthDate" type="date" className={styles.input} />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="countryCode" className={styles.label}>País donde vive</label>
-              <select id="countryCode" name="countryCode" className={styles.input}>
-                <option value="">Seleccione un país</option>
-                {COUNTRIES.map((c) => (
-                  <option key={c.code} value={c.code}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* ─── Preferencias de colección ─── */}
-          <h2 className={styles.sectionTitle} style={{ marginTop: 'var(--sp-6)' }}>
-            ¿Qué colecciona?
-          </h2>
-          <p className={styles.hint}>Seleccione hasta 5 países y 5 temáticas de su interés (opcional)</p>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Países de interés</label>
-            <div className={styles.checkGrid}>
-              {CATALOG_COUNTRIES.map((c) => (
-                <label key={c.code} className={styles.checkLabel}>
-                  <input type="checkbox" name="collectingCountries" value={c.code} className={styles.checkbox} />
-                  {c.name}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Temáticas de interés</label>
-            <div className={styles.checkGrid}>
-              {STAMP_THEMES.slice(0, 10).map((t) => (
-                <label key={t.slug} className={styles.checkLabel}>
-                  <input type="checkbox" name="collectingThemes" value={t.slug} className={styles.checkbox} />
-                  {t.nameEs}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <button type="submit" id="register-submit"
+          <button type="submit" id="register-submit" disabled={loading}
             className={`btn btn--primary ${styles.submitBtn}`}>
-            Crear Mi Cuenta
+            {loading ? 'Procesando...' : 'Crear Mi Cuenta'}
           </button>
         </form>
 

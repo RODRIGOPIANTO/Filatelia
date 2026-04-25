@@ -1,7 +1,8 @@
 'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import { useCart } from '@/context/CartContext'
 import styles from './Navbar.module.css'
 
@@ -16,8 +17,35 @@ const navLinks = [
 
 export default function Navbar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const { totalItems, toggleCart } = useCart()
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { supabase } = await import('@/lib/supabase/client')
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    checkUser()
+    
+    // Listen for auth changes
+    const listen = async () => {
+      const { supabase } = await import('@/lib/supabase/client')
+      supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user || null)
+      })
+    }
+    listen()
+  }, [])
+
+  const handleLogout = async () => {
+    const { supabase } = await import('@/lib/supabase/client')
+    await supabase.auth.signOut()
+    setUser(null)
+    router.refresh()
+  }
 
   return (
     <nav className={styles.navbar} role="navigation" aria-label="Navegación principal">
@@ -57,12 +85,21 @@ export default function Navbar() {
             )}
           </button>
 
-          <Link href="/auth/login" className="btn btn--outline btn--sm">
-            Entrar
-          </Link>
-          <Link href="/auth/register" className="btn btn--primary btn--sm">
-            Regístrese
-          </Link>
+          {user ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>{user.email}</span>
+              <button onClick={handleLogout} className="btn btn--outline btn--sm">Salir</button>
+            </div>
+          ) : (
+            <>
+              <Link href="/auth/login" className="btn btn--outline btn--sm">
+                Entrar
+              </Link>
+              <Link href="/auth/register" className="btn btn--primary btn--sm">
+                Regístrese
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile hamburger */}

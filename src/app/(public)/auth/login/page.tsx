@@ -12,15 +12,34 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleGoogleLogin = async () => {
+    const { supabase } = await import('@/lib/supabase/client')
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError('')
     
-    // Crear cookie de sesión para el Middleware (Modo Demo)
-    document.cookie = "admin_token=demo_access; path=/; max-age=3600"
+    const { supabase } = await import('@/lib/supabase/client')
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
 
-    // Acceso Instantáneo para Modo Demo
-    router.push('/admin/dashboard')
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+    } else {
+      router.push('/')
+      router.refresh()
+    }
   }
 
   return (
@@ -32,21 +51,34 @@ export default function LoginPage() {
           <p className={styles.cardSubtitle}>Ingrese a su cuenta de coleccionista</p>
         </div>
 
+        <button 
+          onClick={handleGoogleLogin} 
+          className={`btn btn--outline ${styles.googleBtn}`}
+          style={{ width: '100%', marginBottom: '1.5rem', display: 'flex', justifyContent: 'center', gap: '0.5rem' }}
+        >
+          <img src="https://www.google.com/favicon.ico" alt="Google" style={{ width: '18px' }} />
+          Continuar con Google
+        </button>
+
+        <div style={{ textAlign: 'center', margin: '1rem 0', color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>
+          O CON EMAIL
+        </div>
+
         <form className={styles.form} id="login-form" onSubmit={handleSubmit}>
           {error && <div className={styles.errorBanner}>{error}</div>}
           
           <div className={styles.formGroup}>
             <label htmlFor="email" className={styles.label}>
-              Email o nombre de usuario
+              Email
             </label>
             <input
               id="email"
               name="email"
-              type="text"
+              type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@test.com"
+              placeholder="su@email.com"
               className={styles.input}
               disabled={loading}
             />

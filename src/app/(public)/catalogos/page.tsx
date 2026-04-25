@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 }
 
 import CatalogGrid from '@/components/catalog/CatalogGrid'
-import styles from './page.module.css'
 
 export default function CatalogosLandingPage() {
   return (
