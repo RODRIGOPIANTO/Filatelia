@@ -45,20 +45,24 @@ export default function ImportarPage() {
     setImporting(true)
     setResult(null)
 
-    // Simulate processing delay (en producción: POST /api/import)
-    await new Promise((r) => setTimeout(r, 1500))
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
 
-    // Demo result
-    setResult({
-      total: 12,
-      ok: 10,
-      errors: [
-        { rowNumber: 3, issues: ['issue_date: Formato de fecha: yyyy-mm-dd'], rawData: { country_iso: 'PE', catalog_number: '5A', issue_date: '01/01/1860' } },
-        { rowNumber: 8, issues: ['face_value: Valor facial requerido (Ej: 1d, S/. 1.20)'], rawData: { country_iso: 'PE', catalog_number: '8', issue_date: '1865-06-01', face_value: '' } },
-      ],
-      fileName: file.name,
-    })
-    setImporting(false)
+      const res = await fetch('/api/import', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!res.ok) throw new Error('Error en el servidor al importar')
+
+      const data = await res.json()
+      setResult(data)
+    } catch (err: any) {
+      alert(err.message)
+    } finally {
+      setImporting(false)
+    }
   }
 
   function downloadTemplate() {

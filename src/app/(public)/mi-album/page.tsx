@@ -1,15 +1,20 @@
-'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './page.module.css'
 
-const MOCK_INVENTORY = [
-  { id: '1', name: 'Penny Black', country: 'GB', year: 1840, condition: 'MNH', value: 3000 },
-  { id: '2', name: 'Inverted Jenny', country: 'US', year: 1918, condition: 'USED', value: 150000 },
-  { id: '3', name: 'Sol de 1857', country: 'PE', year: 1857, condition: 'MH', value: 500 },
-]
-
 export default function MyAlbumPage() {
+  const [inventory, setInventory] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'explorer' | 'legacy'>('explorer')
+
+  useEffect(() => {
+    fetch('/api/user/inventory')
+      .then(res => res.json())
+      .then(data => {
+        setInventory(data.data || [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
   return (
     <div className={`${styles.container} ${viewMode === 'legacy' ? styles.legacy : ''}`}>
@@ -48,19 +53,22 @@ export default function MyAlbumPage() {
 
       <section className={styles.inventory}>
         <h2>Mi Inventario</h2>
-        <div className={styles.grid}>
-          {MOCK_INVENTORY.map(item => (
-            <div key={item.id} className={styles.card}>
-              <div className={styles.cardHeader}>
-                <span className="badge badge--active">{item.country}</span>
-                <span>{item.year}</span>
+        {loading ? <p>Cargando...</p> : (
+          <div className={styles.grid}>
+            {inventory.map(item => (
+              <div key={item.id} className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <span className="badge badge--active">{item.stamp?.face_value}</span>
+                  <span>{item.stamp?.group?.year}</span>
+                </div>
+                <h3>{item.stamp?.group?.title_es}</h3>
+                <p>Condición: <strong>{item.condition || 'Desconocida'}</strong></p>
+                <p className={styles.price}>Valor: ${item.stamp?.base_value || '0.00'}</p>
               </div>
-              <h3>{item.name}</h3>
-              <p>Condición: <strong>{item.condition}</strong></p>
-              <p className={styles.price}>Valor: ${item.value.toLocaleString()}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+            {inventory.length === 0 && <p>Tu álbum está vacío. ¡Empieza a coleccionar!</p>}
+          </div>
+        )}
       </section>
 
       <section className={styles.wishlist}>

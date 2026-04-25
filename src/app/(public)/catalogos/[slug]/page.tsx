@@ -118,17 +118,20 @@ type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const cat = CATALOGS[slug]
-  if (!cat) return { title: 'Catálogo no encontrado' }
+  // Fallback for metadata, ideally fetch from DB
   return {
-    title: `Catálogo ${cat.nameEs} — Filatelia Peruana`,
-    description: cat.descEs,
+    title: `Catálogo Filatélico — Filatelia Peruana`,
   }
 }
 
 export default async function CatalogPage({ params }: Props) {
   const { slug } = await params
-  const catalog = CATALOGS[slug]
+  
+  // Fetch from our real API
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const res = await fetch(`${appUrl}/api/catalogs/${slug}`, { cache: 'no-store' })
+  const { data: catalog } = await res.json()
+
   if (!catalog) notFound()
 
   return (
@@ -138,43 +141,46 @@ export default async function CatalogPage({ params }: Props) {
         <div className="container">
           <p className={styles.breadcrumb}>
             <Link href="/catalogos">Catálogos</Link> /{' '}
-            <Link href="/catalogos/paises">Países</Link> / {catalog.nameEs}
+            <Link href="/catalogos/paises">Países</Link> / {catalog.title_es}
           </p>
-          <h1 className={catalogStyles.catalogTitle}>{catalog.nameEs}</h1>
-          {catalog.descEs && (
-            <p className={styles.desc}>{catalog.descEs}</p>
-          )}
+          <h1 className={catalogStyles.catalogTitle}>{catalog.title_es}</h1>
         </div>
       </header>
 
       {/* Grupos de sellos (álbum crema) */}
       <section className={catalogStyles.albumSection}>
         <div className="container">
-          {catalog.groups.map((group) => (
+          {catalog.stamp_groups?.map((group: any) => (
             <article
               key={group.id}
               className={catalogStyles.stampGroup}
               id={`group-${group.id}`}
             >
               {/* Cabecera verde musgo */}
-              <div className={catalogStyles.stampGroupHeader}>
+              <div className={catalogStyles.stampGroupHeader} style={{ backgroundColor: group.header_color || 'var(--color-primary)' }}>
                 <span className={catalogStyles.stampGroupYear}>{group.year}</span>
-                <span className={catalogStyles.stampGroupTitleEs}>{group.titleEs}</span>
-                {group.titleEn && (
-                  <span className={catalogStyles.stampGroupTitleEn}>{group.titleEn}</span>
-                )}
+                <span className={catalogStyles.stampGroupTitleEs}>{group.title_es}</span>
               </div>
 
               {/* Body — grilla de sellos */}
               <div className={catalogStyles.stampGroupBody}>
                 <div className={catalogStyles.stampGrid}>
-                  {group.stamps.map((stamp) => (
-                    <StampCard key={stamp.id} stamp={stamp} />
+                  {group.stamps?.map((stamp: any) => (
+                    <StampCard key={stamp.id} stamp={{
+                      ...stamp,
+                      catalogNumbers: [], // Placeholder for now
+                      images: [{ url: stamp.main_image_url || '/images/stamps-collage.jpg', altEs: stamp.motivo_es, isPrimary: true }]
+                    }} />
                   ))}
                 </div>
               </div>
             </article>
           ))}
+          {(!catalog.stamp_groups || catalog.stamp_groups.length === 0) && (
+            <p style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-text-muted)' }}>
+              Este catálogo aún no tiene grupos de estampillas asignados.
+            </p>
+          )}
         </div>
       </section>
     </div>

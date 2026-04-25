@@ -52,7 +52,20 @@ export async function POST(req: Request) {
     const data = await response.json()
     const aiResult = JSON.parse(data.choices[0].message.content)
 
-    return NextResponse.json(aiResult)
+    // ─── Matchmaking (Cruce de Datos) ──────────────────────────────────────────
+    // Search in the database using the AI result
+    const { supabase } = await import('@/lib/supabase/client') // Use client or server-side supabase
+    
+    const { data: matches, error: matchError } = await supabase
+      .from('stamps')
+      .select('*, group:stamp_groups(*, catalog:catalogs(*))')
+      .or(`face_value.ilike.%${aiResult.valor_facial}%,motivo_es.ilike.%${aiResult.motivo_principal}%,color.ilike.%${aiResult.motivo_principal}%`)
+      .limit(3)
+
+    return NextResponse.json({
+      ...aiResult,
+      db_matches: matches || []
+    })
   } catch (error: any) {
     console.error('AI Scanner Error:', error)
     return NextResponse.json({ error: 'Failed to process image' }, { status: 500 })

@@ -103,6 +103,21 @@ export default function ScannerPage() {
               <strong>Notas:</strong> {result.notas_condicion}
             </div>
           )}
+
+          {result.db_matches && result.db_matches.length > 0 && (
+            <div className={styles.matches}>
+              <h3>Coincidencias en Catálogo</h3>
+              <div className={styles.matchList}>
+                {result.db_matches.map((match: any) => (
+                  <div key={match.id} className={styles.matchItem}>
+                    <p><strong>{match.face_value}</strong> - {match.group?.title_es} ({match.group?.catalog?.title_es})</p>
+                    <button className="btn btn--primary btn--sm">Agregar a mi álbum</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <button className="btn btn--outline" style={{ marginTop: '1rem' }}>
             Buscar en Catálogo Oficial
           </button>
