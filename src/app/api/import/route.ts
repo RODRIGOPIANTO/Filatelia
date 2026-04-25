@@ -37,36 +37,44 @@ export async function POST(req: Request) {
           .single()
         
         if (!catalog) {
-          const { data: newCat } = await supabase
+          const { data: newCat, error: insertError } = await supabase
             .from('catalogs')
             .insert([{ country_id: country.id, title_es: `Catálogo de ${row.country_iso}`, catalog_type: 'country' }])
             .select()
             .single()
+          
+          if (insertError || !newCat) throw new Error(`Failed to create catalog for ${row.country_iso}: ${insertError?.message}`)
           catalog = newCat
         }
+
+        const catalogId = catalog!.id
 
         // 3. Find or create group
         let { data: group } = await supabase
           .from('stamp_groups')
           .select('id')
-          .eq('catalog_id', catalog.id)
+          .eq('catalog_id', catalogId)
           .eq('year', row.group_year)
           .single()
         
         if (!group) {
-          const { data: newGroup } = await supabase
+          const { data: newGroup, error: insertError } = await supabase
             .from('stamp_groups')
-            .insert([{ catalog_id: catalog.id, title_es: row.group_title_es, year: row.group_year }])
+            .insert([{ catalog_id: catalogId, title_es: row.group_title_es, year: row.group_year }])
             .select()
             .single()
+          
+          if (insertError || !newGroup) throw new Error(`Failed to create group ${row.group_year}: ${insertError?.message}`)
           group = newGroup
         }
+
+        const groupId = group!.id
 
         // 4. Insert stamp
         const { error: stampError } = await supabase
           .from('stamps')
           .insert([{
-            group_id: group.id,
+            group_id: groupId,
             face_value: row.face_value,
             color: row.color,
             issue_date: row.issue_date,
