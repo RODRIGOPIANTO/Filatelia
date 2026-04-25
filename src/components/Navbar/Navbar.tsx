@@ -11,6 +11,7 @@ const navLinks = [
   { href: '/mi-album', label: 'Mi Álbum' },
   { href: '/mercado', label: 'Mercado' },
   { href: '/foro', label: 'Foro' },
+  { href: '/sucesiones', label: 'Sucesiones' },
 ]
 
 export default function Navbar() {
